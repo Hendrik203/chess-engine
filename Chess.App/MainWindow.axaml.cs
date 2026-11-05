@@ -7,6 +7,10 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+
+        Board board = new Board();
+        board.SetupStartingPosition();
+
         for (int row = 7; row >= 0; row--)
         {
             for (int col = 0; col < 8; col++)
@@ -20,6 +24,26 @@ public partial class MainWindow : Window
                 else
                 {
                     square.Background = Brush.Parse("#C1975E");             // helles Feld
+                }
+
+                Piece? piece = board.GetPiece(row, col);
+
+                if(piece != null)
+                {
+                    TextBlock text = new TextBlock();
+                    text.Text = GetSymbol(piece);
+                    text.FontSize = 48;
+                    text.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center;
+                    text.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+                    square.Child = text;
+                    if (piece.Color == PieceColor.White)
+                    {
+                        text.Foreground = Brushes.White;
+                    }
+                    else
+                    {
+                        text.Foreground = Brushes.Black;
+                    }
                 }
 
                 BoardGrid.Children.Add(square);
