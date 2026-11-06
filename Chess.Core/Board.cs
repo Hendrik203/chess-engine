@@ -15,6 +15,13 @@ public class Board
     {
         squares[row, col] = piece;
     }
+
+    public void MovePiece(int fromRow, int fromCol, int toRow, int toCol)
+    {
+        Piece? piece = GetPiece(fromRow,fromCol);
+        SetPiece(toRow, toCol, piece);
+        SetPiece(toRow, toCol, null);
+    }
     
     public void SetupPawns()
     {

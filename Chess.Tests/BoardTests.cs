@@ -91,4 +91,21 @@ public class BoardTests
         Assert.Equal(PieceType.King, e8.Type);
         Assert.Equal(PieceColor.Black, e8.Color);
     }
+
+    [Fact]
+    public void MovePiece_MovesPawnFromE2ToE4()
+    {
+        Board board = new Board();
+        board.SetupStartingPosition();
+
+        board.MovePiece(1, 4, 3, 4);
+
+        Piece? e4 = board.GetPiece(1, 4);
+        Piece? e2 = board.GetPiece(3, 4);
+
+        Assert.NotNull(e4);
+        Assert.Equal(PieceType.Pawn, e4.Type);
+        Assert.Equal(PieceColor.White, e4.Color);
+        Assert.Null(e2);
+    }
 }

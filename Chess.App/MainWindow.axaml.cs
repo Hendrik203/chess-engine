@@ -4,11 +4,11 @@ namespace Chess.App;
 
 public partial class MainWindow : Window
 {
+    private Board board = new Board();
     public MainWindow()
     {
         InitializeComponent();
 
-        Board board = new Board();
         board.SetupStartingPosition();
 
         for (int row = 7; row >= 0; row--)
