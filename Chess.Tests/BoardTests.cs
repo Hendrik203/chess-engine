@@ -100,8 +100,8 @@ public class BoardTests
 
         board.MovePiece(1, 4, 3, 4);
 
-        Piece? e4 = board.GetPiece(1, 4);
-        Piece? e2 = board.GetPiece(3, 4);
+        Piece? e4 = board.GetPiece(3, 4);
+        Piece? e2 = board.GetPiece(1, 4);
 
         Assert.NotNull(e4);
         Assert.Equal(PieceType.Pawn, e4.Type);

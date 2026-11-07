@@ -5,6 +5,8 @@ namespace Chess.App;
 public partial class MainWindow : Window
 {
     private Board board = new Board();
+    private int? selectedRow = null;
+    private int? selectedCol = null;
     public MainWindow()
     {
         InitializeComponent();
@@ -52,9 +54,36 @@ public partial class MainWindow : Window
                         }
                     }
 
+                    int clickedRow = row;
+                    int clickedCol = col;
+
+                    square.PointerPressed += (sender, e) =>
+                    {
+                        if (selectedRow == null)
+                        {
+                            if (board.GetPiece(clickedRow, clickedCol) != null)
+                            {
+                                selectedRow = clickedRow;
+                                selectedCol = clickedCol;
+                            }
+                        }
+                        else
+                        {
+                            board.MovePiece(selectedRow.Value, selectedCol.Value, clickedRow, clickedCol);
+                            selectedRow = null;
+                            selectedCol = null;
+                            DrawBoard();
+                        }
+                    };
+
                     BoardGrid.Children.Add(square);
                 }
             }
+    }
+
+    private void OnSquareClicked(int row, int col)
+    {
+        Title = "Geklickt: Reihe " + row + ", Spalte " + col;
     }
 
     private static string GetSymbol(Piece piece)

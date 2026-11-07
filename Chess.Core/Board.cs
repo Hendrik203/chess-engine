@@ -18,9 +18,14 @@ public class Board
 
     public void MovePiece(int fromRow, int fromCol, int toRow, int toCol)
     {
+        if (fromRow == toRow && fromCol == toCol)
+        {
+            return;
+        }
+
         Piece? piece = GetPiece(fromRow,fromCol);
         SetPiece(toRow, toCol, piece);
-        SetPiece(toRow, toCol, null);
+        SetPiece(fromRow, fromCol, null);
     }
     
     public void SetupPawns()
