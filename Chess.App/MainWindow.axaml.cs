@@ -10,45 +10,51 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         board.SetupStartingPosition();
+        DrawBoard();
+    }
+
+    private void DrawBoard()
+    {
+        BoardGrid.Children.Clear();
 
         for (int row = 7; row >= 0; row--)
-        {
-            for (int col = 0; col < 8; col++)
             {
-                Border square = new Border();
-
-                if ((row + col) % 2 == 0)
+                for (int col = 0; col < 8; col++)
                 {
-                    square.Background = Brush.Parse("#703C29");             // dunkles Feld
-                }
-                else
-                {
-                    square.Background = Brush.Parse("#C1975E");             // helles Feld
-                }
+                    Border square = new Border();
 
-                Piece? piece = board.GetPiece(row, col);
-
-                if(piece != null)
-                {
-                    TextBlock text = new TextBlock();
-                    text.Text = GetSymbol(piece);
-                    text.FontSize = 48;
-                    text.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center;
-                    text.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
-                    square.Child = text;
-                    if (piece.Color == PieceColor.White)
+                    if ((row + col) % 2 == 0)
                     {
-                        text.Foreground = Brushes.White;
+                        square.Background = Brush.Parse("#703C29");             // dunkles Feld
                     }
                     else
                     {
-                        text.Foreground = Brushes.Black;
+                        square.Background = Brush.Parse("#C1975E");             // helles Feld
                     }
-                }
 
-                BoardGrid.Children.Add(square);
+                    Piece? piece = board.GetPiece(row, col);
+
+                    if(piece != null)
+                    {
+                        TextBlock text = new TextBlock();
+                        text.Text = GetSymbol(piece);
+                        text.FontSize = 48;
+                        text.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center;
+                        text.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+                        square.Child = text;
+                        if (piece.Color == PieceColor.White)
+                        {
+                            text.Foreground = Brushes.White;
+                        }
+                        else
+                        {
+                            text.Foreground = Brushes.Black;
+                        }
+                    }
+
+                    BoardGrid.Children.Add(square);
+                }
             }
-        }
     }
 
     private static string GetSymbol(Piece piece)
