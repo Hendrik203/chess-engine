@@ -69,7 +69,11 @@ public partial class MainWindow : Window
                         }
                         else
                         {
-                            board.MovePiece(selectedRow.Value, selectedCol.Value, clickedRow, clickedCol);
+                            if (board.IsLegalMove(selectedRow.Value, selectedCol.Value, clickedRow, clickedCol))
+                            {
+                                board.MovePiece(selectedRow.Value, selectedCol.Value, clickedRow, clickedCol);
+                            }
+                            
                             selectedRow = null;
                             selectedCol = null;
                             DrawBoard();

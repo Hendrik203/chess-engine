@@ -119,4 +119,25 @@ public class BoardTests
         Assert.False(board.IsOnBoard(-1, 3));
         Assert.False(board.IsOnBoard(3, 8));
     }
+
+    [Fact]
+    public void GetKnightTargets_CountsMovesCorrectly()
+    {
+        Board board = new Board();
+
+        List<(int row, int col)> targets = board.GetKnightTargets(0, 1);
+
+        Assert.Equal(3, targets.Count);
+    }
+
+    [Fact]
+    public void IsLegalMove_KnightRules()
+    {
+        Board board = new Board();
+        board.SetupStartingPosition();
+
+        Assert.True(board.IsLegalMove(0, 1, 2, 2));
+        Assert.False(board.IsLegalMove(0, 1, 2, 1));
+        Assert.False(board.IsLegalMove(0, 1, 1, 3));
+    }
 }

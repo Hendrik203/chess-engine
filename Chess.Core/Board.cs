@@ -6,6 +6,9 @@ public class Board
 {
     private Piece?[,] squares = new Piece?[8, 8];
 
+    private int[] knightRowOffsets = { 2, 2, -2, -2, 1, 1, -1, -1 };
+    private int[] knightColOffsets = { 1, -1, 1, -1, 2, -2, 2, -2 };
+
     public Piece? GetPiece(int row, int col)
     {
         return squares[row, col];
@@ -31,6 +34,47 @@ public class Board
     public bool IsOnBoard(int row, int col)
     {
         return row >= 0 && row < 8 && col >= 0 && col < 8;
+    }
+
+    public List<(int row, int col)> GetKnightTargets(int row, int col)
+    {
+        List<(int row, int col)> targets = new List<(int row, int col)>();
+
+        for (int i = 0; i < 8; i++)
+        {
+            int newRow = row + knightRowOffsets[i];
+            int newCol = col + knightColOffsets[i];
+
+            if (IsOnBoard(newRow, newCol))
+            {
+                targets.Add((newRow, newCol));
+            }
+        }
+
+        return targets;
+    }
+
+        public bool IsLegalMove(int fromRow, int fromCol, int toRow, int toCol)
+    {
+        Piece? piece = GetPiece(fromRow, fromCol);
+        if (piece == null)
+        {
+            return false;
+        }
+
+        Piece? target = GetPiece(toRow, toCol);
+        if (target != null && target.Color == piece.Color)
+        {
+            return false;
+        }
+
+        if (piece.Type == PieceType.Knight)
+        {
+            List<(int row, int col)> targets = GetKnightTargets(fromRow, fromCol);
+            return targets.Contains((toRow, toCol));
+        }
+
+        return true;
     }
     
     public void SetupPawns()
