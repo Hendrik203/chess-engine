@@ -108,4 +108,15 @@ public class BoardTests
         Assert.Equal(PieceColor.White, e4.Color);
         Assert.Null(e2);
     }
+
+    [Fact]
+    public void IsOnBoard_RecognizesFieldsInsideAndOutside()
+    {
+        Board board = new Board();
+
+        Assert.True(board.IsOnBoard(0, 0));
+        Assert.True(board.IsOnBoard(7, 7));
+        Assert.False(board.IsOnBoard(-1, 3));
+        Assert.False(board.IsOnBoard(3, 8));
+    }
 }

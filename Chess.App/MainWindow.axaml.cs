@@ -59,7 +59,7 @@ public partial class MainWindow : Window
 
                     square.PointerPressed += (sender, e) =>
                     {
-                        if (selectedRow == null)
+                        if (selectedRow == null || selectedCol == null)
                         {
                             if (board.GetPiece(clickedRow, clickedCol) != null)
                             {

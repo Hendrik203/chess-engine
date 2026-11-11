@@ -27,6 +27,11 @@ public class Board
         SetPiece(toRow, toCol, piece);
         SetPiece(fromRow, fromCol, null);
     }
+
+    public bool IsOnBoard(int row, int col)
+    {
+        return row >= 0 && row < 8 && col >= 0 && col < 8;
+    }
     
     public void SetupPawns()
     {
