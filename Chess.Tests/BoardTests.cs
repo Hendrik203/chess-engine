@@ -206,4 +206,17 @@ public class BoardTests
         Assert.False(board.IsLegalMove(1, 4, 1, 3));
         Assert.True(board.IsLegalMove(1, 4, 4, 4));
     }
+
+    [Fact]
+    public void TryMakeMove_AlternatesPlayers()
+    {
+        Board board = new Board();
+        board.SetupStartingPosition();
+
+        Assert.Equal(PieceColor.White, board.CurrentPlayer);
+        Assert.False(board.TryMakeMove(6, 4, 4, 4));
+        Assert.True(board.TryMakeMove(1, 4, 3, 4));
+        Assert.Equal(PieceColor.Black, board.CurrentPlayer);
+        Assert.False(board.TryMakeMove(1, 3, 3, 3));
+    }
 }

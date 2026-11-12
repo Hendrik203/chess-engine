@@ -17,6 +17,7 @@ public class Board
     private int[] bishopColDirs = { 1, -1, 1, -1 };
     private int[] QueenRowDirs = { 1, -1, 0, 0, 1, 1, -1, -1 };
     private int[] QueenColDirs = { 0, 0, 1, -1, 1, -1, 1, -1 };
+    public PieceColor CurrentPlayer { get; private set; } = PieceColor.White;
 
     public Piece? GetPiece(int row, int col)
     {
@@ -325,6 +326,34 @@ public class Board
         SetPiece(toRow, toCol, captured);
 
         return !kingInCheck;
+    }
+
+    public bool TryMakeMove(int fromRow, int fromCol, int toRow, int toCol)
+    {
+        Piece? piece = GetPiece(fromRow, fromCol);
+
+        if (piece == null || piece.Color != CurrentPlayer)
+        {
+            return false;
+        }
+
+        if (!IsLegalMove(fromRow, fromCol, toRow, toCol))
+        {
+            return false;
+        }
+
+        MovePiece(fromRow, fromCol, toRow, toCol);
+
+        if (CurrentPlayer == PieceColor.White)
+        {
+            CurrentPlayer = PieceColor.Black;
+        }
+        else
+        {
+            CurrentPlayer = PieceColor.White;
+        }
+
+        return true;
     }
     
     public void SetupPawns()

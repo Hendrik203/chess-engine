@@ -69,14 +69,12 @@ public partial class MainWindow : Window
                         }
                         else
                         {
-                            if (board.IsLegalMove(selectedRow.Value, selectedCol.Value, clickedRow, clickedCol))
-                            {
-                                board.MovePiece(selectedRow.Value, selectedCol.Value, clickedRow, clickedCol);
-                            }
+                            board.TryMakeMove(selectedRow.Value, selectedCol.Value, clickedRow, clickedCol);
                             
                             selectedRow = null;
                             selectedCol = null;
                             DrawBoard();
+                            Title = "Am Zug: " + board.CurrentPlayer;
                         }
                     };
 
