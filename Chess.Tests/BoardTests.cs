@@ -179,4 +179,19 @@ public class BoardTests
         board.SetPiece(2, 3, new Piece(PieceType.Knight, PieceColor.Black));
         Assert.Single(board.GetPawnTargets(1, 4));
     }
+
+    [Fact]
+    public void IsInCheck_DetectsRookAttackAndBlock()
+    {
+        Board board = new Board();
+        board.SetPiece(0, 4, new Piece(PieceType.King, PieceColor.White));
+        board.SetPiece(7, 4, new Piece(PieceType.Rook, PieceColor.Black));
+
+        Assert.True(board.IsInCheck(PieceColor.White));
+        Assert.False(board.IsInCheck(PieceColor.Black));
+
+        board.SetPiece(1, 4, new Piece(PieceType.Pawn, PieceColor.White));
+
+        Assert.False(board.IsInCheck(PieceColor.White));
+    }
 }

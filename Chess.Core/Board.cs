@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.Runtime.InteropServices;
 
 namespace Chess.Core;
@@ -176,6 +177,77 @@ public class Board
         }
 
         return targets;
+    }
+
+    public List<(int row, int col)> GetTargets(int row, int col)
+    {
+        Piece? piece = GetPiece(row, col);
+
+        if (piece == null)
+        {
+            return new List<(int row, int col)>();
+        }
+
+        switch (piece.Type)
+        {
+            case PieceType.Knight:
+                return GetKnightTargets(row, col);
+            case PieceType.King:
+                return GetKingTargets(row, col);
+            case PieceType.Rook:
+                return GetRookTargets(row, col);
+            case PieceType.Bishop:
+                return GetBishopTargets(row, col);
+            case PieceType.Queen:
+                return GetQueenTargets(row, col);
+            case PieceType.Pawn:
+                return GetPawnTargets(row, col);
+            default:
+                return new List<(int row, int col)>();
+        }
+    }
+
+    public bool IsInCheck(PieceColor color)
+    {
+        int kingRow = -1;
+        int kingCol = -1;
+
+        for (int row = 0; row < 8; row++)
+        {
+            for (int col = 0; col < 8; col++)
+            {
+                Piece? piece = GetPiece(row, col);
+
+                if (piece != null && piece.Type == PieceType.King && piece.Color == color)
+                {
+                    kingRow = row;
+                    kingCol = col;
+                }
+            }
+        }
+
+        if (kingRow == -1)
+        {
+            return false;
+        }
+
+        for (int row = 0; row < 8; row++)
+        {
+            for (int col = 0; col < 8; col++)
+            {
+                Piece? piece = GetPiece(row, col);
+
+                if (piece != null && piece.Color != color)
+                {
+                    if (GetTargets(row, col).Contains((kingRow, kingCol)))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     public bool IsLegalMove(int fromRow, int fromCol, int toRow, int toCol)
