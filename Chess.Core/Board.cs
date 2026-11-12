@@ -18,6 +18,8 @@ public class Board
     private int[] QueenRowDirs = { 1, -1, 0, 0, 1, 1, -1, -1 };
     private int[] QueenColDirs = { 0, 0, 1, -1, 1, -1, 1, -1 };
     public PieceColor CurrentPlayer { get; private set; } = PieceColor.White;
+    private int enPassantRow = -1;
+    private int enPassantCol = -1;
 
     public Piece? GetPiece(int row, int col)
     {
@@ -171,6 +173,10 @@ public class Board
                 Piece? other = GetPiece(oneStep, captureCol);
 
                 if (other != null && other.Color != pawn.Color)
+                {
+                    targets.Add((oneStep, captureCol));
+                }
+                else if (other == null && oneStep == enPassantRow && captureCol == enPassantCol && pawn.Color == CurrentPlayer)
                 {
                     targets.Add((oneStep, captureCol));
                 }
@@ -348,7 +354,23 @@ public class Board
             return false;
         }
 
+        bool isEnPassant = piece.Type == PieceType.Pawn && toCol != fromCol && GetPiece(toRow, toCol) == null;
+
         MovePiece(fromRow, fromCol, toRow, toCol);
+
+        enPassantRow = -1;
+        enPassantCol = -1;
+
+        if (isEnPassant)
+        {
+            SetPiece(fromRow, toCol, null);
+        }
+
+        if (piece.Type == PieceType.Pawn && Math.Abs(toRow - fromRow) == 2)
+        {
+            enPassantRow = (fromRow + toRow) / 2;
+            enPassantCol = fromCol;
+        }
 
         if (piece.Type == PieceType.Pawn && (toRow == 7 || toRow == 0))
         {

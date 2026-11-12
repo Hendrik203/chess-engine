@@ -263,4 +263,21 @@ public class BoardTests
         Assert.Equal(PieceType.Queen, promoted.Type);
         Assert.Equal(PieceColor.White, promoted.Color);
     }
+
+    [Fact]
+    public void TryMakeMove_EnPassantCapture()
+    {
+        Board board = new Board();
+        board.SetPiece(0, 0, new Piece(PieceType.King, PieceColor.White));
+        board.SetPiece(7, 7, new Piece(PieceType.King, PieceColor.Black));
+        board.SetPiece(4, 4, new Piece(PieceType.Pawn, PieceColor.White));
+        board.SetPiece(6, 3, new Piece(PieceType.Pawn, PieceColor.Black));
+
+        Assert.True(board.TryMakeMove(0, 0, 1, 0));
+        Assert.True(board.TryMakeMove(6, 3, 4, 3));
+        Assert.True(board.TryMakeMove(4, 4, 5, 3));
+
+        Assert.Null(board.GetPiece(4, 3));
+        Assert.NotNull(board.GetPiece(5, 3));
+    }
 }
