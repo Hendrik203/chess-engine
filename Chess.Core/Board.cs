@@ -250,7 +250,7 @@ public class Board
         return false;
     }
 
-    public bool IsLegalMove(int fromRow, int fromCol, int toRow, int toCol)
+    public bool IsPseudoLegalMove(int fromRow, int fromCol, int toRow, int toCol)
     {
         Piece? piece = GetPiece(fromRow, fromCol);
         if (piece == null)
@@ -301,6 +301,30 @@ public class Board
         }
 
         return true;
+    }
+
+    public bool IsLegalMove(int fromRow, int fromCol, int toRow, int toCol)
+    {
+        if (!IsPseudoLegalMove(fromRow, fromCol, toRow, toCol))
+        {
+            return false;
+        }
+
+        Piece? mover = GetPiece(fromRow, fromCol);
+        Piece? captured = GetPiece(toRow, toCol);
+
+        if (mover == null)
+        {
+            return false;
+        }
+
+        MovePiece(fromRow, fromCol, toRow, toCol);
+        bool kingInCheck = IsInCheck(mover.Color);
+
+        SetPiece(fromRow, fromCol, mover);
+        SetPiece(toRow, toCol, captured);
+
+        return !kingInCheck;
     }
     
     public void SetupPawns()

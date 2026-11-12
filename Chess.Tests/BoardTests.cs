@@ -194,4 +194,16 @@ public class BoardTests
 
         Assert.False(board.IsInCheck(PieceColor.White));
     }
+
+    [Fact]
+    public void IsLegalMove_PinnedPieceCannotLeaveTheLine()
+    {
+        Board board = new Board();
+        board.SetPiece(0, 4, new Piece(PieceType.King, PieceColor.White));
+        board.SetPiece(1, 4, new Piece(PieceType.Rook, PieceColor.White));
+        board.SetPiece(7, 4, new Piece(PieceType.Rook, PieceColor.Black));
+
+        Assert.False(board.IsLegalMove(1, 4, 1, 3));
+        Assert.True(board.IsLegalMove(1, 4, 4, 4));
+    }
 }
