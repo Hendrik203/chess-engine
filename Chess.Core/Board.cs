@@ -330,6 +330,12 @@ public class Board
 
     public bool TryMakeMove(int fromRow, int fromCol, int toRow, int toCol)
     {
+
+        if (!HasAnyLegalMove(CurrentPlayer))
+        {
+            return false;
+        }
+
         Piece? piece = GetPiece(fromRow, fromCol);
 
         if (piece == null || piece.Color != CurrentPlayer)
@@ -343,6 +349,11 @@ public class Board
         }
 
         MovePiece(fromRow, fromCol, toRow, toCol);
+
+        if (piece.Type == PieceType.Pawn && (toRow == 7 || toRow == 0))
+        {
+            SetPiece(toRow, toCol, new Piece(PieceType.Queen, piece.Color));
+        }
 
         if (CurrentPlayer == PieceColor.White)
         {

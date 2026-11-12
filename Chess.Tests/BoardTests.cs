@@ -246,4 +246,21 @@ public class BoardTests
         Assert.True(board.IsStalemate(PieceColor.Black));
         Assert.False(board.IsCheckmate(PieceColor.Black));
     }
+
+    [Fact]
+    public void TryMakeMove_PawnPromotesToQueen()
+    {
+        Board board = new Board();
+        board.SetPiece(0, 4, new Piece(PieceType.King, PieceColor.White));
+        board.SetPiece(0, 0, new Piece(PieceType.King, PieceColor.Black));
+        board.SetPiece(6, 7, new Piece(PieceType.Pawn, PieceColor.White));
+
+        Assert.True(board.TryMakeMove(6, 7, 7, 7));
+
+        Piece? promoted = board.GetPiece(7, 7);
+
+        Assert.NotNull(promoted);
+        Assert.Equal(PieceType.Queen, promoted.Type);
+        Assert.Equal(PieceColor.White, promoted.Color);
+    }
 }
