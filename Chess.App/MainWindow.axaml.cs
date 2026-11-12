@@ -74,7 +74,19 @@ public partial class MainWindow : Window
                             selectedRow = null;
                             selectedCol = null;
                             DrawBoard();
-                            Title = "Am Zug: " + board.CurrentPlayer;
+                            
+                            if (board.IsCheckmate(board.CurrentPlayer))
+                            {
+                                Title = "Schachmatt! " + board.CurrentPlayer + " hat verloren.";
+                            }
+                            else if (board.IsStalemate(board.CurrentPlayer))
+                            {
+                                Title = "Patt! Unentschieden.";
+                            }
+                            else
+                            {
+                                Title = "Am Zug: " + board.CurrentPlayer;
+                            }
                         }
                     };
 

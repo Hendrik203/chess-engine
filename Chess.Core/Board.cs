@@ -355,6 +355,42 @@ public class Board
 
         return true;
     }
+
+    public bool HasAnyLegalMove(PieceColor color)
+    {
+        for (int row = 0; row < 8; row++)
+        {
+            for (int col = 0; col < 8; col++)
+            {
+                Piece? piece = GetPiece(row, col);
+
+                if (piece != null && piece.Color == color)
+                {
+                    List<(int row, int col)> targets = GetTargets(row, col);
+
+                    for (int i = 0; i < targets.Count; i++)
+                    {
+                        if (IsLegalMove(row, col, targets[i].row, targets[i].col))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public bool IsCheckmate(PieceColor color)
+    {
+        return IsInCheck(color) && !HasAnyLegalMove(color);
+    }
+
+    public bool IsStalemate(PieceColor color)
+    {
+        return !IsInCheck(color) && !HasAnyLegalMove(color);
+    }
     
     public void SetupPawns()
     {

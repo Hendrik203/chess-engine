@@ -219,4 +219,31 @@ public class BoardTests
         Assert.Equal(PieceColor.Black, board.CurrentPlayer);
         Assert.False(board.TryMakeMove(1, 3, 3, 3));
     }
+
+    [Fact]
+    public void IsCheckmate_FoolsMate()
+    {
+        Board board = new Board();
+        board.SetupStartingPosition();
+
+        board.TryMakeMove(1, 5, 2, 5);
+        board.TryMakeMove(6, 4, 4, 4);
+        board.TryMakeMove(1, 6, 3, 6);
+        board.TryMakeMove(7, 3, 3, 7);
+
+        Assert.True(board.IsCheckmate(PieceColor.White));
+        Assert.False(board.IsStalemate(PieceColor.White));
+    }
+
+    [Fact]
+    public void IsStalemate_KingAndQueenCornerPosition()
+    {
+        Board board = new Board();
+        board.SetPiece(7, 0, new Piece(PieceType.King, PieceColor.Black));
+        board.SetPiece(6, 2, new Piece(PieceType.King, PieceColor.White));
+        board.SetPiece(5, 1, new Piece(PieceType.Queen, PieceColor.White));
+
+        Assert.True(board.IsStalemate(PieceColor.Black));
+        Assert.False(board.IsCheckmate(PieceColor.Black));
+    }
 }
