@@ -10,6 +10,12 @@ public class Board
     private int[] knightColOffsets = { 1, -1, 1, -1, 2, -2, 2, -2 };
     private int[] kingRowOffsets = { 1, 1, 1, 0, 0, -1, -1, -1 };
     private int[] kingColOffsets = { 1, 0, -1, 1, -1, 1, 0, -1 };
+    private int[] rookRowDirs = { 1, -1, 0, 0 };
+    private int[] rookColDirs = { 0, 0, 1, -1 };
+    private int[] bishopRowDirs = { 1, 1, -1, -1 };
+    private int[] bishopColDirs = { 1, -1, 1, -1 };
+    private int[] QueenRowDirs = { 1, -1, 0, 0, 1, 1, -1, -1 };
+    private int[] QueenColDirs = { 0, 0, 1, -1, 1, -1, 1, -1 };
 
     public Piece? GetPiece(int row, int col)
     {
@@ -56,6 +62,41 @@ public class Board
         return targets;
     }
 
+    private List<(int row, int col)> GetSlideTargets(int row, int col, int[] rowDirs, int[] colDirs)
+    {
+        List<(int row, int col)> targets = new List<(int row, int col)>();
+        Piece? mover = GetPiece(row, col);
+
+        for (int i = 0; i < rowDirs.Length; i++)
+        {
+            int newRow = row + rowDirs[i];
+            int newCol = col + colDirs[i];
+
+            while (IsOnBoard(newRow, newCol))
+            {
+                Piece? other = GetPiece(newRow, newCol);
+
+                if (other == null)
+                {
+                    targets.Add((newRow, newCol));
+                }
+                else
+                {
+                    if (mover != null && other.Color != mover.Color)
+                    {
+                        targets.Add((newRow, newCol));
+                    }
+                    break;
+                }
+
+                newRow += rowDirs[i];
+                newCol += colDirs[i];
+            }
+        }
+
+        return targets;
+    }
+
     public List<(int row, int col)> GetKnightTargets(int row, int col)
     {
         return GetStepTargets(row, col, knightRowOffsets, knightColOffsets);
@@ -64,6 +105,21 @@ public class Board
     public List<(int row, int col)> GetKingTargets(int row, int col)
     {
         return GetStepTargets(row, col, kingRowOffsets, kingColOffsets);
+    }
+
+    public List<(int row, int col)> GetRookTargets(int row, int col)
+    {
+        return GetSlideTargets(row, col, rookRowDirs, rookColDirs);
+    }
+
+    public List<(int row, int col)> GetBishopTargets(int row, int col)
+    {
+        return GetSlideTargets(row, col, bishopRowDirs, bishopColDirs);
+    }
+
+    public List<(int row, int col)> GetQueenTargets(int row, int col)
+    {
+        return GetSlideTargets(row, col, QueenRowDirs, QueenColDirs);
     }
 
     public bool IsLegalMove(int fromRow, int fromCol, int toRow, int toCol)
@@ -89,6 +145,18 @@ public class Board
         if (piece.Type == PieceType.King)
         {
             List<(int row, int col)> targets = GetKingTargets(fromRow, fromCol);
+            return targets.Contains((toRow, toCol));
+        }
+
+        if (piece.Type == PieceType.Bishop)
+        {
+            List<(int row, int col)> targets = GetBishopTargets(fromRow, fromCol);
+            return targets.Contains((toRow, toCol));
+        }
+
+        if (piece.Type == PieceType.Queen)
+        {
+            List<(int row, int col)> targets = GetQueenTargets(fromRow, fromCol);
             return targets.Contains((toRow, toCol));
         }
 

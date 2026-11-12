@@ -151,4 +151,17 @@ public class BoardTests
         Assert.True(board.IsLegalMove(3, 4, 4, 5));
         Assert.False(board.IsLegalMove(3, 4, 5, 4));
     }
+
+    [Fact]
+    public void RookTargets_StopAtBlockingPieces()
+    {
+        Board board = new Board();
+        board.SetPiece(3, 4, new Piece(PieceType.Rook, PieceColor.White));
+
+        Assert.Equal(14, board.GetRookTargets(3, 4).Count);
+
+        board.SetPiece(5, 4, new Piece(PieceType.Pawn, PieceColor.Black));
+
+        Assert.Equal(12, board.GetRookTargets(3, 4).Count);
+    }
 }
