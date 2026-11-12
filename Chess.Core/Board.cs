@@ -122,6 +122,62 @@ public class Board
         return GetSlideTargets(row, col, QueenRowDirs, QueenColDirs);
     }
 
+    public List<(int row, int col)> GetPawnTargets(int row, int col)
+    {
+        List<(int row, int col)> targets = new List<(int row, int col)>();
+        Piece? pawn = GetPiece(row, col);
+
+        if (pawn == null)
+        {
+            return targets;
+        }
+
+        int direction;
+        int startRow;
+
+        if (pawn.Color == PieceColor.White)
+        {
+            direction = +1;
+            startRow = 1;
+        }
+        else
+        {
+            direction = -1;
+            startRow = 6;
+        }
+
+        int oneStep = row + direction;
+
+        if (IsOnBoard(oneStep, col) && GetPiece(oneStep, col) == null)
+        {
+            targets.Add((oneStep, col));
+
+            int twoSteps = row + 2 * direction;
+
+            if (row == startRow && GetPiece(twoSteps, col) == null)
+            {
+                targets.Add((twoSteps, col));
+            }
+        }
+
+        for (int side = -1; side <= 1; side += 2)
+        {
+            int captureCol = col + side;
+
+            if (IsOnBoard(oneStep, captureCol))
+            {
+                Piece? other = GetPiece(oneStep, captureCol);
+
+                if (other != null && other.Color != pawn.Color)
+                {
+                    targets.Add((oneStep, captureCol));
+                }
+            }
+        }
+
+        return targets;
+    }
+
     public bool IsLegalMove(int fromRow, int fromCol, int toRow, int toCol)
     {
         Piece? piece = GetPiece(fromRow, fromCol);
@@ -138,26 +194,38 @@ public class Board
 
         if (piece.Type == PieceType.Knight)
         {
-            List<(int row, int col)> targets = GetKnightTargets(fromRow, fromCol);
-            return targets.Contains((toRow, toCol));
+            List<(int row, int col)> KnightTargets = GetKnightTargets(fromRow, fromCol);
+            return KnightTargets.Contains((toRow, toCol));
         }
 
         if (piece.Type == PieceType.King)
         {
-            List<(int row, int col)> targets = GetKingTargets(fromRow, fromCol);
-            return targets.Contains((toRow, toCol));
+            List<(int row, int col)> KingTargets = GetKingTargets(fromRow, fromCol);
+            return KingTargets.Contains((toRow, toCol));
+        }
+
+        if (piece.Type == PieceType.Rook)
+        {
+            List<(int row, int col)> rookTargets = GetRookTargets(fromRow, fromCol);
+            return rookTargets.Contains((toRow, toCol));
         }
 
         if (piece.Type == PieceType.Bishop)
         {
-            List<(int row, int col)> targets = GetBishopTargets(fromRow, fromCol);
-            return targets.Contains((toRow, toCol));
+            List<(int row, int col)> bishopTargets = GetBishopTargets(fromRow, fromCol);
+            return bishopTargets.Contains((toRow, toCol));
         }
 
         if (piece.Type == PieceType.Queen)
         {
-            List<(int row, int col)> targets = GetQueenTargets(fromRow, fromCol);
-            return targets.Contains((toRow, toCol));
+            List<(int row, int col)> queenTargets = GetQueenTargets(fromRow, fromCol);
+            return queenTargets.Contains((toRow, toCol));
+        }
+
+        if (piece.Type == PieceType.Pawn)
+        {
+            List<(int row, int col)> pawnTargets = GetPawnTargets(fromRow, fromCol);
+            return pawnTargets.Contains((toRow, toCol));
         }
 
         return true;

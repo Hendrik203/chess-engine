@@ -164,4 +164,19 @@ public class BoardTests
 
         Assert.Equal(12, board.GetRookTargets(3, 4).Count);
     }
+
+    [Fact]
+    public void PawnTargets_ForwardAndCapture()
+    {
+        Board board = new Board();
+        board.SetupStartingPosition();
+
+        Assert.Equal(2, board.GetPawnTargets(1, 4).Count);
+
+        board.SetPiece(2, 4, new Piece(PieceType.Knight, PieceColor.Black));
+        Assert.Empty(board.GetPawnTargets(1, 4));
+
+        board.SetPiece(2, 3, new Piece(PieceType.Knight, PieceColor.Black));
+        Assert.Single(board.GetPawnTargets(1, 4));
+    }
 }
