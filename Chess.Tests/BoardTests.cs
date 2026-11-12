@@ -140,4 +140,15 @@ public class BoardTests
         Assert.False(board.IsLegalMove(0, 1, 2, 1));
         Assert.False(board.IsLegalMove(0, 1, 1, 3));
     }
+
+    [Fact]
+    public void KingTargets_AndLegalMoves()
+    {
+        Board board = new Board();
+        board.SetPiece(3, 4, new Piece(PieceType.King, PieceColor.White));
+
+        Assert.Equal(8, board.GetKingTargets(3, 4).Count);
+        Assert.True(board.IsLegalMove(3, 4, 4, 5));
+        Assert.False(board.IsLegalMove(3, 4, 5, 4));
+    }
 }

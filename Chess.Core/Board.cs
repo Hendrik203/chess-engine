@@ -8,6 +8,8 @@ public class Board
 
     private int[] knightRowOffsets = { 2, 2, -2, -2, 1, 1, -1, -1 };
     private int[] knightColOffsets = { 1, -1, 1, -1, 2, -2, 2, -2 };
+    private int[] kingRowOffsets = { 1, 1, 1, 0, 0, -1, -1, -1 };
+    private int[] kingColOffsets = { 1, 0, -1, 1, -1, 1, 0, -1 };
 
     public Piece? GetPiece(int row, int col)
     {
@@ -36,14 +38,14 @@ public class Board
         return row >= 0 && row < 8 && col >= 0 && col < 8;
     }
 
-    public List<(int row, int col)> GetKnightTargets(int row, int col)
+    private List<(int row, int col)> GetStepTargets(int row, int col, int[] rowOffsets, int[] colOffsets)
     {
         List<(int row, int col)> targets = new List<(int row, int col)>();
 
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < rowOffsets.Length; i++)
         {
-            int newRow = row + knightRowOffsets[i];
-            int newCol = col + knightColOffsets[i];
+            int newRow = row + rowOffsets[i];
+            int newCol = col + colOffsets[i];
 
             if (IsOnBoard(newRow, newCol))
             {
@@ -54,7 +56,17 @@ public class Board
         return targets;
     }
 
-        public bool IsLegalMove(int fromRow, int fromCol, int toRow, int toCol)
+    public List<(int row, int col)> GetKnightTargets(int row, int col)
+    {
+        return GetStepTargets(row, col, knightRowOffsets, knightColOffsets);
+    }
+
+    public List<(int row, int col)> GetKingTargets(int row, int col)
+    {
+        return GetStepTargets(row, col, kingRowOffsets, kingColOffsets);
+    }
+
+    public bool IsLegalMove(int fromRow, int fromCol, int toRow, int toCol)
     {
         Piece? piece = GetPiece(fromRow, fromCol);
         if (piece == null)
@@ -71,6 +83,12 @@ public class Board
         if (piece.Type == PieceType.Knight)
         {
             List<(int row, int col)> targets = GetKnightTargets(fromRow, fromCol);
+            return targets.Contains((toRow, toCol));
+        }
+
+        if (piece.Type == PieceType.King)
+        {
+            List<(int row, int col)> targets = GetKingTargets(fromRow, fromCol);
             return targets.Contains((toRow, toCol));
         }
 
